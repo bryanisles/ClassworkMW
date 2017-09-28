@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery Calculator</title>
+
+    <!-- Added link to the jQuery Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Added a link to Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+</head>
+<body>
+
+<!-- Instructions:
+
+Create the JavaScript logic necessary to add functionality to the jQuery Calculator.
+
+Your calculator should be able to handle basic mathematical operations like addition, subtraction, multiplication, etc.
+
+You should be making use of the existing buttons.
+
+You should be making use of the existing placeholders for entering content (i.e. "firstNumber", "operator", "secondNumber", "result").
+
+You should have fun and push yourselves! This is a challenge activity—which means, if you get it done, you are a King of jQuery. If you don't, no sweat. The important thing is that you learned at least a FEW things along the way. 
+
+*Phase I Objectives*
+
+For this first 20 minutes, your goals should be to:
+
+Become familiar with the various elements of the HTML page as it is written now. (Identify the classes and IDs that matter!)
+
+Create a general strategy for how you will accomplish the task:
+
+How will you capture button clicks?   // by on click event
+What will you do with the numbers clicked?    // select id first-number
+What will you do when the operator is clicked? 
+How will you differentiate numbers from operators?
+How will you know the "value" of a number clicked?
+How will you know when a user is done entering the first number?
+Etc.
+Create a few test "on-click" events. These could just trigger Alert messages for now. If you get further along, then have these buttons alert their "value".
+
+*Phase II Objectives*
+
+For the next 30 minutes, your goals should be to:
+
+Begin creating sets of variables that you think you will need. As a few suggestions:
+
+firstNumber, secondNumber, operator, result
+Create code that captures the numbers from button clicks, and then displays them on the HTML.
+
+Create code that captures an operator click, then immediately tells your code to begin recording the second number. (Example: If a user clicks the "plus" button, you know they are done typing the first number).
+
+Create code that checks which operator the user has clicked, then saves this operator for later use in a conditional statement. (Example: If a user clicks the "plus" button, you know you will need to be adding two numbers. If a user clicks the "minus" button, you will need to be subtracting two numbers. Think: If-Then statements!)
+-->
+
+<!-- Jumbotron for Title -->
+<div class="jumbotron">
+    <h1 class="text-center">jQuery Calculator</h1>
+    <h3 class="text-center">Perform basic mathematic operations using the power of jQuery!</h3>
+</div>
+
+<div class="container">
+
+    <div class="row">
+
+        <!-- Calculator Panel -->
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Calculator</h3>
+                </div>
+
+                <div class="panel-body">
+                    <button id="button-1" class="btn btn-primary number" value="1"><h1>1</h1></button>
+                    <button id="button-2" class="btn btn-primary number" value="2"><h1>2</h1></button>
+                    <button id="button-3" class="btn btn-primary number" value="3"><h1>3</h1></button>
+                    <button id="button-plus" class="btn btn-danger operator" value="plus"><h1>+</h1></button>
+                    <br><br>
+                    <button id="button-4" class="btn btn-primary number" value="4"><h1>4</h1></button>
+                    <button id="button-5" class="btn btn-primary number" value="5"><h1>5</h1></button>
+                    <button id="button-6" class="btn btn-primary number" value="6"><h1>6</h1></button>
+                    <button id="button-minus" class="btn btn-danger operator" value="minus"><h1>&minus;</h1></button>
+                    <br><br>
+                    <button id="button-7" class="btn btn-primary number" value="7"><h1>7</h1></button>
+                    <button id="button-8" class="btn btn-primary number" value="8"><h1>8</h1></button>
+                    <button id="button-9" class="btn btn-primary number" value="9"><h1>9</h1></button>
+                    <button id="button-multiply" class="btn btn-danger operator" value="times"><h1>&times;</h1></button>
+                    <br><br>
+                    <button id="button-0" class="btn btn-primary number" value="0"><h1>0</h1></button>
+                    <button id="button-divide" class="btn btn-danger operator" value="divide"><h1>&divide;</h1></button>
+                    <button id="button-power" class="btn btn-danger operator" value="power"><h1>^</h1></button>
+                    <button id="button-equal" class="btn btn-success equal" value="equals"><h1>=</h1></button>
+                    <br><br>
+                    <button id="button-clear" class="btn btn-default clear" value="clear"><h1>clear</h1></button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="col-lg-6">
+        <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Result</h3>
+                </div>
+                <div class="panel-body">
+                    <h1 id="first-number"></h1>
+                    <h1 id="operator"></h1>
+                    <h1 id="second-number"></h1>
+                    <hr>
+                    <h1 id="result"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	//global variables
+	var firstNumber;
+	var secondNumber;
+	var operator;
+	var result;
+	var isOperatorChosen;
+	var isCalculated;
+
+	// initialization function used for initializing the values once document is ready and when the clear button is pressed
+	var initializerFunc = function() {
+		firstNumber = "";
+		secondNumber = "";
+		operator = "";
+		result = "";
+		isOperatorChosen = false;
+		isCalculated = false;
+
+		$("#first-number, #operator, #second-number, #result").empty();
+	}
+
+	// initialize all ofthe variables
+	initializerFunc();
+	
+	// places the elements with the mathematical statement into an inline element 
+	$("#first-number, #operator, #second-number").attr("style","display:inline;");
+
+	// re-initialize all variables and remove all values within the following respective id's first-number, operator, second-number, result
+	$(".clear").on("click", function(){
+		initializerFunc();
+	})
+
+	// on-click event for when a button with a class "number" is clicked
+	$(".number").on("click", function(){
+		//checks if the operator is chosen and if the calculation has not been run 
+		if(!isOperatorChosen && !isCalculated) {
+			firstNumber += this.value;
+			$("#first-number").html(firstNumber);
+		}
+		//checks if the operator is chosen and if the calculation has not been run
+		if (isOperatorChosen && !isCalculated) {
+			secondNumber += this.value;
+			$("#second-number").html(secondNumber);
+		}	
+	})
+	
+	// on-click event for when a button with a class "operator" is clicked
+	$(".operator").on("click", function(){
+		// checks if the first number has not been selected
+		if(firstNumber == "") {
+			alert("Please select a Number first");
+		} else {
+			// sets the operator to the selected operator per the operator on-click event
+			operator = this.value;
+			// checks what operator was selected and displays the respective symbol
+			switch(true) {
+				case (operator == "plus" && !isCalculated):
+					$("#operator").html("+");
+					break;
+				case (operator == "minus" && !isCalculated):
+					$("#operator").html("&minus;");
+					break;
+				case (operator == "times" && !isCalculated):
+					$("#operator").html("&times;");
+					break;
+				case (operator == "divide" && !isCalculated):
+					$("#operator").html("&divide;");
+					break;
+				case (operator == "power" && !isCalculated):
+					$("#operator").html("^");
+			}
+
+			// checks if the mathematical statement has been calculated
+			if(!isCalculated) {
+				// changes the boolean statement for if the operator has been chosen from false to true
+				isOperatorChosen = !isOperatorChosen;	
+			}
+		}
+		
+	})
+
+	// on-click event for when a button with a class "equal" is clicked 
+	$(".equal").on("click", function(){
+		// checks if the second number is blank and if the mathematical statemenet has not been calculated
+		if(secondNumber == "" && !isCalculated){
+			alert("Please complete mathematical entry!");
+		} else {
+			// passes the string as an integer and re-assigns the variable with that value
+			firstNumber = parseInt(firstNumber);
+			secondNumber = parseInt(secondNumber);
+
+			// checks what operator was chosen and executes the proper mathematical operation
+			switch (operator) {
+				case "plus":
+					result = firstNumber + secondNumber;
+					$("#result").html(result);
+					break;
+				case "minus":
+					result = firstNumber - secondNumber;
+					$("#result").html(result);
+					break;
+				case "times":
+					result = firstNumber * secondNumber;
+					$("#result").html(result);
+					break;
+				case "divide":
+					result = firstNumber / secondNumber;
+					$("#result").html(result);
+					break;
+				case "power":
+					result = Math.pow(firstNumber, secondNumber);
+					$("#result").html(result);
+			}
+			
+			// changes the boolean statement for if the mathematical statement has been executed from false to true 
+			isCalculated = !isCalculated;
+		}
+	})
+
+});
+
+</script>
+
+</body>
+</html>
